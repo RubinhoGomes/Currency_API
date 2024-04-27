@@ -17,4 +17,9 @@ def calculate():
 
 @app.route('/get/currency')
 def get_currency():
-    return currency_webscrapping.Currency.USD.name  
+    currency = request.args.get('currency')
+    amount = request.args.get('amount')
+
+    result = currency_webscrapping.CurrencyConverter.get_currency(currency, amount)
+    
+    return result

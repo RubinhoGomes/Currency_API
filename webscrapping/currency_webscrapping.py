@@ -29,8 +29,8 @@ class CurrencyConverter:
     @staticmethod
     def calculate(amount, currency_from, currency_to):
 
-        URL = f'https://www.x-rates.com/calculator/?from={currency_from}&to={currency_to}&amount={amount}'
-        page = requests.get(URL)
+        URL_calculate = f'https://www.x-rates.com/calculator/?from={currency_from}&to={currency_to}&amount={amount}'
+        page = requests.get(URL_calculate)
         soup = BeautifulSoup(page.content, 'html.parser')
 
         value = soup.find_all('span', class_='ccOutputRslt')[0].get_text()
@@ -40,7 +40,30 @@ class CurrencyConverter:
         return json.dumps(calc.to_json())
 
 
+    @staticmethod
+    def get_currency(currency, amount):
+        URL_get = f'https://www.x-rates.com/table/?from={currency}&amount={amount}'
+        page = requests.get(URL_get)
+        soup = BeautifulSoup(page.content, 'html.parser')
+
+        rows = soup.find('table', class_='ratesTable').find('tbody').find_all('tr')
+
+        values = []
+        json_dict = {}
+        i = 0
+
+        for row in rows:
+            values = row.get_text().split('\n')
+            json_dict[i] = {
+                'currency': values[1],
+                'rate': values[2],
+                'inverse_rate': values[3]
+            }
+            i += 1
+        
+        return json.dumps(json_dict)
+
 # Example usage
-result = CurrencyConverter.calculate(100, Currency.USD.name, Currency.EUR.name)
-print(result)
+# result = CurrencyConverter.calculate(100, Currency.USD.name, Currency.EUR.name)
+# print(result)
 

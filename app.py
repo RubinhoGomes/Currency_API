@@ -15,11 +15,11 @@ def calculate():
     
     return result
 
-@app.route('/get/currency')
-def get_currency():
+@app.route('/get/rates')
+def get_rates():
     currency = request.args.get('currency')
     amount = request.args.get('amount')
 
-    result = currency_webscrapping.CurrencyConverter.get_currency(currency, amount)
+    result = currency_webscrapping.CurrencyConverter.get_rates(currency, amount)
     
     return result

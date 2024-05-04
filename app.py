@@ -1,9 +1,20 @@
 from webscrapping import currency_webscrapping
+from config import create_config, update_validation
 from flask import Flask, request
 
 
 app = Flask(__name__)
 
+@app.route('/activate')
+def activation():
+    secret_key = request.args.post('SECRET_KEY')
+    validation = request.args.post('VALIDATION')
+    if(validation == False):
+        config.update_validation()
+        with open('./logs.txt') as file:
+            file.write(f'{secret_key}\n')
+
+    return 'Your access key was activated'
 
 @app.route('/calculate')
 def calculate():
@@ -23,3 +34,5 @@ def get_rates():
     result = currency_webscrapping.CurrencyConverter.get_rates(currency, amount)
     
     return result
+
+
